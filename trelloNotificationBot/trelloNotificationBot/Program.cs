@@ -25,30 +25,18 @@ namespace trelloNotificationBot
             => new Program().StartAsync().GetAwaiter().GetResult();
 
         private IConfigurationRoot _config;
+        private IConfigurationRoot _boardInfo;
 
-        private const String CONFIG_FILE = "config.json";
+        private const string CONFIG_FILE = "config.json";
+        private const string BOARD_INFO_FILE = "boards.json";
 
         public async Task StartAsync()
         {
             Console.WriteLine();
 
-            // Generate empty JSON configuration file if one does not exist.
-            if (!File.Exists(CONFIG_FILE))
-            {
-                File.Create(CONFIG_FILE).Dispose();
-
-                ConfigurationSettings configSettings = new ConfigurationSettings();
-
-                string jsonOutput = JsonConvert.SerializeObject(configSettings, Formatting.Indented);
-                File.WriteAllText(CONFIG_FILE, jsonOutput);
-            }
-
-            // Read configuration data.
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile(CONFIG_FILE, optional: true, reloadOnChange: true);
-
-            _config = builder.Build();
+            // Load JSON data
+            _config = ReadJSONConfig(CONFIG_FILE);
+            _boardInfo = ReadJSONConfig(BOARD_INFO_FILE);
 
             // Begin building the service provider with the following settings.
             // Cache 1000 messages per channel.
@@ -65,6 +53,7 @@ namespace trelloNotificationBot
                     DefaultRunMode = RunMode.Async,
                     LogLevel = LogSeverity.Verbose
                 }))
+                .AddSingleton<Reminder>()
                 .AddSingleton<Commands>()
                 .AddSingleton<Startup>()
                 .AddSingleton<Logger>()
@@ -75,10 +64,33 @@ namespace trelloNotificationBot
 
             provider.GetRequiredService<Logger>();
             await provider.GetRequiredService<Startup>().StartAsync();
+            provider.GetRequiredService<Reminder>();
             provider.GetRequiredService<Commands>();
 
             // Prevent the application from closing.
             await Task.Delay(-1);
+        }
+
+
+        public IConfigurationRoot ReadJSONConfig(string fileName)
+        {
+            // Generate empty JSON configuration file if one does not exist.
+            if (!File.Exists(fileName))
+            {
+                File.Create(fileName).Dispose();
+
+                BoardDictionary configSettings = new BoardDictionary();
+
+                string jsonOutput = JsonConvert.SerializeObject(configSettings, Formatting.Indented);
+                File.WriteAllText(fileName, jsonOutput);
+            }
+
+            // Read configuration data.
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile(fileName, optional: true, reloadOnChange: true);
+
+            return builder.Build();
         }
     }
 }

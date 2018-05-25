@@ -12,18 +12,21 @@ namespace trelloNotificationBot.Services
         private readonly CommandService commands;
         private readonly IConfigurationRoot config;
         private readonly IServiceProvider provider;
+        private readonly IConfigurationRoot boards;
 
         // DiscordSocketClient, CommandService, IConfigurationRoot, and IServiceProvider are injected automatically from the IServiceProvider
         public Commands(
             DiscordSocketClient discord,
             CommandService commands,
             IConfigurationRoot config,
-            IServiceProvider provider)
+            IServiceProvider provider,
+            IConfigurationRoot boards)
         {
             this.discord = discord;
             this.commands = commands;
             this.config = config;
             this.provider = provider;
+            this.boards = boards;
 
             discord.MessageReceived += OnMessageReceivedAsync;
         }

@@ -15,42 +15,23 @@ namespace trelloNotificationBot.Services
 {
     class Reminder
     {
-        private const string BOARD_INFO_FILE = "boards.json";
-        private IConfiguration _boardInfo;
 
         private readonly DiscordSocketClient discord;
         private readonly IConfigurationRoot config;
         private readonly ITrello trello;
+        private readonly IConfigurationRoot boards;
 
         // DiscordSocketClient and CommandService are injected automatically from the IServiceProvider
-        public Reminder(DiscordSocketClient discord, IConfigurationRoot config)
+        public Reminder(DiscordSocketClient discord, 
+            IConfigurationRoot config,
+            IConfigurationRoot boards)
         {
             this.discord = discord;
             this.config = config;
+            this.boards = boards;
             this.trello = new Trello(this.config["tokens:trello"]);
 
-            ReadBoardInfo();
-        }
-
-        public void ReadBoardInfo()
-        {
-            // Generate empty JSON configuration file if one does not exist.
-            if (!File.Exists(BOARD_INFO_FILE))
-            {
-                File.Create(BOARD_INFO_FILE).Dispose();
-
-                BoardDictionary configSettings = new BoardDictionary();
-
-                string jsonOutput = JsonConvert.SerializeObject(configSettings, Formatting.Indented);
-                File.WriteAllText(BOARD_INFO_FILE, jsonOutput);
-            }
-
-            // Read configuration data.
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile(BOARD_INFO_FILE, optional: true, reloadOnChange: true);
-
-            _boardInfo = builder.Build();
+            Console.Out.WriteLine("test");
         }
 
 
