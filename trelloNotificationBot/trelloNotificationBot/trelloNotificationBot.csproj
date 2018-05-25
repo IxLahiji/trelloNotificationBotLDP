@@ -186,6 +186,7 @@
     <Compile Include="Model\ConfigTemplates\ConfigurationSettings.cs" />
     <Compile Include="Model\ConfigTemplates\Member.cs" />
     <Compile Include="Model\ConfigTemplates\Tokens.cs" />
+    <Compile Include="Modules\Admin.cs" />
     <Compile Include="Modules\Public.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,7 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
 
-using trelloNotificationBot.Model.ConfigTemplates;
 using Microsoft.Extensions.Configuration;
 using TrelloNet;
 
