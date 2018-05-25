@@ -181,7 +181,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\ConfigTemplates\Board.cs" />
+    <Compile Include="Model\ConfigTemplates\BoardDictionary.cs" />
     <Compile Include="Model\ConfigTemplates\ConfigurationSettings.cs" />
+    <Compile Include="Model\ConfigTemplates\Member.cs" />
     <Compile Include="Model\ConfigTemplates\Tokens.cs" />
     <Compile Include="Modules\Public.cs" />
     <Compile Include="Program.cs" />
